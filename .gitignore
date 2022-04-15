@@ -4,3 +4,4 @@
 *.template.py
 /curl.bash
 /codeBlocks/curl.template.bash
+*.log
