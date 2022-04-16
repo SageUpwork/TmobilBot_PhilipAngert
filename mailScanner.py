@@ -68,7 +68,7 @@ def get_emails(result_bytes, con):
 
 
 def connectAndFetchMails(mailFrom):
-    con = imaplib.IMAP4_SSL(imap_url)
+    con = imaplib.IMAP4_SSL(imap_url, timeout=10)
     con.login(user, password)
     con.select('Inbox')
     msgs = get_emails(search('FROM', mailFrom, con), con)
@@ -116,7 +116,8 @@ if __name__ == '__main__':
             mobileNums.append(y["MobileNum"])
 
 
-    core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user)
+    logger.debug(mobileNums)
+    # core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user)
 
 
     open("lastUpdatedMail.timestamp", "w").write(str(max([x['Date'] for x in extractedData])))
