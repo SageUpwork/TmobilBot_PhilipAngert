@@ -305,16 +305,19 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                          ((x.text.startswith(mobileNum)) & (x.text.endswith('\n•••')))][0]
         selectedEntry.find_elements(by=By.CLASS_NAME, value="action-ball-margin")[0].click()
         # selectedEntry.find_elements_by_class_name("action-ball-margin")[0].click()
-        driver.find_element(by=By.ID, value="lineMeatBall0").find_elements(by=By.TAG_NAME, value="li")[3].click()
-        time.sleep(1.2*5)
-        driver.find_element_by_id("managePopUp").find_elements_by_class_name("mat-checkbox-inner-container")[
-            0].find_elements_by_tag_name("input")[0].send_keys(" ")
-        time.sleep(1.2*3)
-        driver.find_element_by_id("managePopUp").find_elements(by=By.TAG_NAME, value="button")[-1].click()
-        time.sleep(1.2*10)
-        if "Restore-line request complete" in driver.page_source:
-            logger.debug("Request generated for " + mobileNum + " with transaction number: " + driver.find_element(by=By.ID, value="old-number").text)
-        else:
+        try:
+            driver.find_element(by=By.ID, value="lineMeatBall0").find_elements(by=By.TAG_NAME, value="li")[3].click()
+            time.sleep(1.2*5)
+            driver.find_element_by_id("managePopUp").find_elements_by_class_name("mat-checkbox-inner-container")[
+                0].find_elements_by_tag_name("input")[0].send_keys(" ")
+            time.sleep(1.2*3)
+            driver.find_element_by_id("managePopUp").find_elements(by=By.TAG_NAME, value="button")[-1].click()
+            time.sleep(1.2*10)
+            if "Restore-line request complete" in driver.page_source:
+                logger.debug("Request generated for " + mobileNum + " with transaction number: " + driver.find_element(by=By.ID, value="old-number").text)
+            else:
+                logger.debug("Request failed for" + mobileNum + ". Need manual intervention")
+        except:
             logger.debug("Request failed for" + mobileNum + ". Need manual intervention")
         time.sleep(1.2*5)
     driver.quit()
