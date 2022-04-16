@@ -136,17 +136,17 @@ def fetchOTP_Mail(imap_url, imap_password, imap_user):
 
 def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_user):
     driver.get("https://tfb.t-mobile.com")
-    time.sleep(5)
+    time.sleep(3*5)
     ActionChains(driver).send_keys(tmob_username + Keys.ENTER).perform()
-    time.sleep(5)
+    time.sleep(3*5)
     ActionChains(driver).send_keys(tmob_password + Keys.ENTER).perform()
-    time.sleep(10)
+    time.sleep(3*10)
     OTP = fetchOTP_Mail(imap_url, imap_password, imap_user)[0][0].split(">")[-1]
     ActionChains(driver).send_keys(OTP + Keys.ENTER).perform()
-    time.sleep(20)
+    time.sleep(3*20)
     for x in range(10):
         if driver.current_url != "https://tfb.t-mobile.com/apps/tfb_billing/dashboard":
-            time.sleep(10)
+            time.sleep(3*10)
             logger.debug("Waiting login")
         else:
             logger.debug("Login Success.")
@@ -294,28 +294,28 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
         raise Exception("Login Failed")
     for mobileNum in mobileNums:
         driver.get("https://tfb.t-mobile.com/apps/tfb_acctmgmt/account-management/lines")
-        time.sleep(5)
+        time.sleep(3*5)
         driver.find_element(by=By.ID, value="tmobilelisting-search").send_keys(mobileNum + Keys.ENTER)
         for _ in range(10):
             if "Acct #967526621" not in driver.page_source:
-                time.sleep(2)
+                time.sleep(3*2)
 
         selectedEntry = [x for x in driver.find_elements(by=By.CLASS_NAME, value="ng-star-inserted") if
                          ((x.text.startswith(mobileNum)) & (x.text.endswith('\n•••')))][0]
         selectedEntry.find_elements(by=By.CLASS_NAME, value="action-ball-margin")[0].click()
         # selectedEntry.find_elements_by_class_name("action-ball-margin")[0].click()
         driver.find_element(by=By.ID, value="lineMeatBall0").find_elements(by=By.TAG_NAME, value="li")[3].click()
-        time.sleep(5)
+        time.sleep(3*5)
         driver.find_element_by_id("managePopUp").find_elements_by_class_name("mat-checkbox-inner-container")[
             0].find_elements_by_tag_name("input")[0].send_keys(" ")
-        time.sleep(3)
+        time.sleep(3*3)
         driver.find_element_by_id("managePopUp").find_elements(by=By.TAG_NAME, value="button")[-1].click()
-        time.sleep(10)
+        time.sleep(3*10)
         if "Restore-line request complete" in driver.page_source:
             logger.debug("Request generated for " + mobileNum + " with transaction number: " + driver.find_element(by=By.ID, value="old-number").text)
         else:
             logger.debug("Request failed for" + mobileNum + ". Need manual intervention")
-        time.sleep(5)
+        time.sleep(3*5)
     driver.quit()
 
 if __name__ == '__main__':
