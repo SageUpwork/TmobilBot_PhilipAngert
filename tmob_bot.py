@@ -295,7 +295,7 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
         raise Exception("Login Failed")
     for mobileNum in mobileNums:
         driver.get("https://tfb.t-mobile.com/apps/tfb_acctmgmt/account-management/lines")
-        time.sleep(1.2*5)
+        time.sleep(2*5)
         driver.find_element(by=By.ID, value="tmobilelisting-search").send_keys(mobileNum + Keys.ENTER)
         for _ in range(10):
             if "Acct #967526621" not in driver.page_source:
