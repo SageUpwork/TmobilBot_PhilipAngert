@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # ------------------------------------------------------------
+import json
 import os
 import logging
 
@@ -116,8 +117,11 @@ if __name__ == '__main__':
             mobileNums.append(y["MobileNum"])
 
 
-    logger.debug(mobileNums)
-    # core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user)
+    logger.debug(json.dumps(mobileNums, indent=3))
+    if len(mobileNums) > 0:
+        core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user)
+    else:
+        logger.debug("No new activities")
 
 
     open("lastUpdatedMail.timestamp", "w").write(str(max([x['Date'] for x in extractedData])))
