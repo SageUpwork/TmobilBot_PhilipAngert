@@ -15,6 +15,8 @@ from calendar import timegm
 
 from config import *
 from tmob_bot import core
+from signal import signal, SIGINT
+from sys import exit
 
 
 def loggerInit(logFileName):
@@ -93,7 +95,7 @@ def parsedMails(msgs):
                     pass
     return msgDataset
 
-if __name__ == '__main__':
+def mainApp():
     msgs = connectAndFetchMails(mailFrom)
     msgDataset = parsedMails(msgs)
 
@@ -125,3 +127,37 @@ if __name__ == '__main__':
 
 
     open("lastUpdatedMail.timestamp", "w").write(str(max([x['Date'] for x in extractedData])))
+
+
+
+def handler(signal_received, frame):
+    # Handle any cleanup here
+    try:
+        try: os.remove("mailScanner.lock")
+        except: pass
+        print('SIGINT or CTRL-C detected. Exiting gracefully')
+        exit(0)
+    except Exception as e: logger.info(f"Handler failed close: {e}")
+
+
+if __name__ == '__main__':
+    signal(SIGINT, handler)
+    while True:
+        if 'mailScanner.lock' not in os.listdir():
+            with open('mailScanner.lock', 'w') as fp:
+                pass
+            try:
+                # For testing
+                start = time.perf_counter()
+                mainApp()
+                finish = time.perf_counter()
+                if finish-start > runGap:
+                    time.sleep(finish-start)
+                # core(headless=True)
+            except Exception as e:
+                logger.info(f"Run failed {e}")
+            os.remove("mailScanner.lock")
+            # print(dataOut)
+        else:
+            logger.info("Another monitoring instance already active")
+            break

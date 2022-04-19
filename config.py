@@ -4,3 +4,4 @@ imap_user = 'shop@switchboxcontrol.com'
 imap_password = 'Support33!'
 imap_url = 'imap.gmail.com'
 tmob_username, tmob_password = "shop@switchboxcontrol.com", "Support33!"
+runGap = 60 * 3
