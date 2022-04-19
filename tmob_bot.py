@@ -301,7 +301,7 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                 WebDriverWait(driver, 30).until(EC.visibility_of_all_elements_located((By.ID, "tmobilelisting-search")))
                 break
             except:
-                driver.get("https://tfb.t-mobile.com/apps/tfb_acctmgmt/account-management/lines")
+                driver.refresh()
 
 
         driver.find_element(by=By.ID, value="tmobilelisting-search").send_keys(mobileNum + Keys.ENTER)
