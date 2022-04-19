@@ -315,12 +315,13 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
         # selectedEntry.find_elements_by_class_name("action-ball-margin")[0].click()
         try:
             driver.find_element(by=By.ID, value="lineMeatBall0").find_elements(by=By.TAG_NAME, value="li")[3].click()
-            time.sleep(1.2*5)
+            time.sleep(5)
             driver.find_element(by=By.ID,value="managePopUp").find_elements_by_class_name("mat-checkbox-inner-container")[
                 0].find_elements_by_tag_name("input")[0].send_keys(" ")
-            time.sleep(1.2*3)
+            time.sleep(5)
             driver.find_element(by=By.ID,value="managePopUp").find_elements(by=By.TAG_NAME, value="button")[-1].click()
-            time.sleep(1.2*10)
+            time.sleep(5)
+            WebDriverWait(driver, 30).until(EC.visibility_of_all_elements_located((By.ID, "tmobilelisting-search")))
             if "Restore-line request complete" in driver.page_source:
                 logger.debug("Request generated for " + mobileNum + " with transaction number: " + driver.find_element(by=By.ID, value="old-number").text)
             else:
