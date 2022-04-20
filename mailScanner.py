@@ -122,11 +122,12 @@ def mainApp():
     logger.debug(json.dumps(mobileNums, indent=3))
     if len(mobileNums) > 0:
         core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user)
+        open("lastUpdatedMail.timestamp", "w").write(str(max([x['Date'] for x in extractedData])))
     else:
         logger.debug("No new activities")
 
 
-    open("lastUpdatedMail.timestamp", "w").write(str(max([x['Date'] for x in extractedData])))
+
 
 
 

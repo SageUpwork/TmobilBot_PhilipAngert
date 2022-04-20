@@ -86,7 +86,9 @@ def seleniumLiteTrigger():
     logger.debug("Mozilla profile path : " + moz_profPath)
     logger.debug("Mozilla gecko path : " + geckoPath)
     # driver = webdriver.Firefox(options=options, executable_path=geckoPath)
-    driver = webdriver.Firefox(executable_path="driver/geckodriver")
+    # geckoPath = r"/Users/phillipangert/Downloads/TmobilBot_PhilipAngert/driver/geckodriver"
+
+    driver = webdriver.Firefox(executable_path="/Users/phillipangert/Downloads/TmobilBot_PhilipAngert/driver/geckodriver")
     return driver
 
 
