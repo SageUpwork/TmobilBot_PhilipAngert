@@ -298,12 +298,19 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
     for mobileNum in mobileNums:
         driver.get("https://tfb.t-mobile.com/apps/tfb_acctmgmt/account-management/lines")
         found = False
+        atmpt = 0
         while found == False:
-            try:
-                WebDriverWait(driver, 30).until(EC.visibility_of_all_elements_located((By.ID, "tmobilelisting-search")))
-                break
-            except:
-                driver.refresh()
+            if atmpt < 5:
+                try:
+                    WebDriverWait(driver, 30).until(EC.visibility_of_all_elements_located((By.ID, "tmobilelisting-search")))
+                    break
+                except:
+                    atmpt += 1
+                    driver.refresh()
+            else:
+                driver.quit()
+                logger.debug("Platform error, attempting login")
+                raise Exception("PlatformBonkers")
 
 
         driver.find_element(by=By.ID, value="tmobilelisting-search").send_keys(mobileNum + Keys.ENTER)
