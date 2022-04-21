@@ -109,7 +109,8 @@ def mainApp():
         entry = {}
         entry["MobileNum"] = re.findall("(\d+) needs to be activated",x)[0]
         mailTime = re.findall(r"\w+, \d{1,2} \w+ \d+ [\d\:]+ -0700 \(PDT\)",x)[0]
-        mailTimeObj = time.strptime(mailTime.rstrip(" -0700 (PDT)"), "%a, %d %b %Y %H:%M:%S")
+        try:mailTimeObj = time.strptime(mailTime.rstrip(" -0700 (PDT)"), "%a, %d %b %Y %H:%M:%S")
+        except:mailTimeObj = time.strptime(mailTime.rstrip(" -0700 (PDT)")+"00", "%a, %d %b %Y %H:%M:%S")
         entry["Date"] = datetime.fromtimestamp(time.mktime(mailTimeObj)).timestamp()
         extractedData.append(entry)
 
