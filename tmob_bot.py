@@ -292,53 +292,57 @@ def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_us
 
 def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user):
     driver = seleniumLiteTrigger()
-    cookies = login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_user)
-    if "tfb_billing/dashboard" not in driver.current_url:
-        raise Exception("Login Failed")
-    for mobileNum in mobileNums:
-        driver.get("https://tfb.t-mobile.com/apps/tfb_acctmgmt/account-management/lines")
-        found = False
-        atmpt = 0
-        while found == False:
-            if atmpt < 5:
-                try:
-                    WebDriverWait(driver, 30).until(EC.visibility_of_all_elements_located((By.ID, "tmobilelisting-search")))
-                    break
-                except:
-                    atmpt += 1
-                    driver.refresh()
-            else:
-                driver.quit()
-                logger.debug("Platform error, attempting login")
-                raise Exception("PlatformBonkers")
+    try:
+        cookies = login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_user)
+        if "tfb_billing/dashboard" not in driver.current_url:
+            raise Exception("Login Failed")
+        for mobileNum in mobileNums:
+            driver.get("https://tfb.t-mobile.com/apps/tfb_acctmgmt/account-management/lines")
+            found = False
+            atmpt = 0
+            while found == False:
+                if atmpt < 5:
+                    try:
+                        WebDriverWait(driver, 30).until(EC.visibility_of_all_elements_located((By.ID, "tmobilelisting-search")))
+                        break
+                    except:
+                        atmpt += 1
+                        driver.refresh()
+                else:
+                    driver.quit()
+                    logger.debug("Platform error, attempting login")
+                    raise Exception("PlatformBonkers")
 
 
-        driver.find_element(by=By.ID, value="tmobilelisting-search").send_keys(mobileNum + Keys.ENTER)
-        for _ in range(10):
-            if "Acct #967526621" not in driver.page_source:
-                time.sleep(1.2*2)
+            driver.find_element(by=By.ID, value="tmobilelisting-search").send_keys(mobileNum + Keys.ENTER)
+            for _ in range(10):
+                if "Acct #967526621" not in driver.page_source:
+                    time.sleep(1.2*2)
 
-        selectedEntry = [x for x in driver.find_elements(by=By.CLASS_NAME, value="ng-star-inserted") if
-                         ((x.text.startswith(mobileNum)) & (x.text.endswith('\n•••')))][0]
-        selectedEntry.find_elements(by=By.CLASS_NAME, value="action-ball-margin")[0].click()
-        # selectedEntry.find_elements_by_class_name("action-ball-margin")[0].click()
-        try:
-            driver.find_element(by=By.ID, value="lineMeatBall0").find_elements(by=By.TAG_NAME, value="li")[3].click()
-            time.sleep(5)
-            driver.find_element(by=By.ID,value="managePopUp").find_elements_by_class_name("mat-checkbox-inner-container")[
-                0].find_elements_by_tag_name("input")[0].send_keys(" ")
-            time.sleep(5)
-            driver.find_element(by=By.ID,value="managePopUp").find_elements(by=By.TAG_NAME, value="button")[-1].click()
-            time.sleep(5)
-            WebDriverWait(driver, 30).until(EC.visibility_of_all_elements_located((By.ID, "tmobilelisting-search")))
-            if "Restore-line request complete" in driver.page_source:
-                logger.debug("Request generated for " + mobileNum + " with transaction number: " + driver.find_element(by=By.ID, value="old-number").text)
-            else:
+            selectedEntry = [x for x in driver.find_elements(by=By.CLASS_NAME, value="ng-star-inserted") if
+                             ((x.text.startswith(mobileNum)) & (x.text.endswith('\n•••')))][0]
+            selectedEntry.find_elements(by=By.CLASS_NAME, value="action-ball-margin")[0].click()
+            # selectedEntry.find_elements_by_class_name("action-ball-margin")[0].click()
+            try:
+                driver.find_element(by=By.ID, value="lineMeatBall0").find_elements(by=By.TAG_NAME, value="li")[3].click()
+                time.sleep(5)
+                driver.find_element(by=By.ID,value="managePopUp").find_elements_by_class_name("mat-checkbox-inner-container")[
+                    0].find_elements_by_tag_name("input")[0].send_keys(" ")
+                time.sleep(5)
+                driver.find_element(by=By.ID,value="managePopUp").find_elements(by=By.TAG_NAME, value="button")[-1].click()
+                time.sleep(5)
+                WebDriverWait(driver, 30).until(EC.visibility_of_all_elements_located((By.ID, "tmobilelisting-search")))
+                if "Restore-line request complete" in driver.page_source:
+                    logger.debug("Request generated for " + mobileNum + " with transaction number: " + driver.find_element(by=By.ID, value="old-number").text)
+                else:
+                    logger.debug("Request failed for" + mobileNum + ". Need manual intervention")
+            except:
                 logger.debug("Request failed for" + mobileNum + ". Need manual intervention")
-        except:
-            logger.debug("Request failed for" + mobileNum + ". Need manual intervention")
-        time.sleep(1.2*5)
-    driver.quit()
+            time.sleep(1.2*5)
+        driver.quit()
+    except Exception as e:
+        driver.quit()
+        raise Exception(e)
 
 if __name__ == '__main__':
     pass
