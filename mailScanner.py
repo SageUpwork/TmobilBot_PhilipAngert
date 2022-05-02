@@ -119,7 +119,8 @@ def mainApp():
         if y['Date'] > lastUpdatedMailTimestamp:
             mobileNums.append(y["MobileNum"])
 
-    mobileNums = list(set(mobileNums))
+    failedNums = json.loads(open("failedNums.txt","r").read())
+    mobileNums = list(set(mobileNums+failedNums))
     logger.debug(json.dumps(mobileNums, indent=3))
     if len(mobileNums) > 0:
         core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user)

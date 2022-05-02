@@ -3,6 +3,7 @@
 
 # ------------------------------------------------------------
 import imaplib
+import json
 import os
 import logging
 import platform
@@ -291,6 +292,7 @@ def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_us
 
 
 def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user):
+    failedNums = []
     driver = seleniumLiteTrigger()
     try:
         cookies = login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_user)
@@ -311,6 +313,7 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                 else:
                     driver.quit()
                     logger.debug("Platform error, attempting login")
+                    failedNums.append(mobileNum)
                     raise Exception("PlatformBonkers")
 
 
@@ -336,12 +339,16 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                     logger.debug("Request generated for " + mobileNum + " with transaction number: " + driver.find_element(by=By.ID, value="old-number").text)
                 else:
                     logger.debug("Request failed for" + mobileNum + ". Need manual intervention")
+                    failedNums.append(mobileNum)
             except:
                 logger.debug("Request failed for" + mobileNum + ". Need manual intervention")
+                failedNums.append(mobileNum)
             time.sleep(1.2*5)
         driver.quit()
+        open("failedNums.txt", "w").write(json.dumps(failedNums))
     except Exception as e:
         driver.quit()
+        open("failedNums.txt", "w").write(json.dumps(failedNums))
         raise Exception(e)
 
 if __name__ == '__main__':
