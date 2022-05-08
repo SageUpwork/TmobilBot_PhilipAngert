@@ -209,6 +209,8 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                              ((x.text.startswith(mobileNum)) & (x.text.endswith('\n•••')))][0]
             if len(selectedEntry.find_elements(by=By.CLASS_NAME, value="suspended-text")) == 0:
                 logger.debug(f"{mobileNum} already active. Skipping")
+            if len(selectedEntry.find_elements(by=By.CLASS_NAME, value="canceled-text")) == 0:
+                logger.debug(f"{mobileNum} is cancelled. Skipping")
             selectedEntry.find_elements(by=By.CLASS_NAME, value="action-ball-margin")[0].click()
             # selectedEntry.find_elements_by_class_name("action-ball-margin")[0].click()
             try:
