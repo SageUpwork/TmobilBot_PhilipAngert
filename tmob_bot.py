@@ -64,6 +64,35 @@ logger = loggerInit(logFileName="tmob_bot.log")
 
 
 
+def seleniumLiteTrigger_Chromium():
+    options = Options()
+    # options.headless = True
+
+    if "Windows" in str(platform.system()):
+        # WINDOWS
+        geckoPath = r"driver\geckodriver.exe"
+        moz_profPath = r"C:\Users\SaGe\AppData\Roaming\Mozilla\Firefox\Profiles\jbz9m3sj.default"
+        # driver = webdriver.Firefox(options=options, executable_path=geckoPath)
+
+    elif "Linux" in str(platform.system()):
+        # Linux
+        geckoPath = r"driver/chromedriver"
+        moz_profPath = r"/home/sage/.mozilla/firefox/249x8q9b.default-release"
+
+    else:
+        # Mac
+        geckoPath = r"driver/chromedriver"
+        moz_profPath = r"/Users/SaGe/Library/Application Support/Firefox/Profiles/24po1ob3.default-release"
+
+    logger.debug("Mozilla profile path : " + moz_profPath)
+    logger.debug("Mozilla gecko path : " + geckoPath)
+    # driver = webdriver.Firefox(options=options, executable_path=geckoPath)
+    # geckoPath = r"/Users/phillipangert/Downloads/TmobilBot_PhilipAngert/driver/geckodriver"
+
+    driver = webdriver.Firefox(executable_path="/Users/phillipangert/Downloads/TmobilBot_PhilipAngert/driver/chromedriver")
+    return driver
+
+
 def seleniumLiteTrigger():
     options = Options()
     # options.headless = True
@@ -167,7 +196,7 @@ def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_us
 
 def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user):
     failedNums = []
-    driver = seleniumLiteTrigger()
+    driver = seleniumLiteTrigger_Chromium()
     try:
         cookies = login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_user)
         if "tfb_billing/dashboard" not in driver.current_url:
