@@ -145,9 +145,15 @@ def fetchOTP_Mail(imap_url, imap_password, imap_user):
 def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_user):
     driver.get("https://tfb.t-mobile.com")
     time.sleep(1.2*5)
-    ActionChains(driver).send_keys(tmob_username + Keys.ENTER).perform()
+    for x in tmob_username:
+        ActionChains(driver).send_keys(x).perform()
+        time.sleep(0.2)
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
     time.sleep(1.2*5)
-    ActionChains(driver).send_keys(tmob_password + Keys.ENTER).perform()
+    for x in tmob_password:
+        ActionChains(driver).send_keys(x).perform()
+        time.sleep(0.2)
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
     for x in range(60):
         if driver.current_url != "https://tfb.t-mobile.com/apps/tfb_billing/dashboard":
             time.sleep(2)
@@ -157,7 +163,10 @@ def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_us
             break
     if driver.current_url != "https://tfb.t-mobile.com/apps/tfb_billing/dashboard":
         OTP = fetchOTP_Mail(imap_url, imap_password, imap_user)[0][0].split(">")[-1]
-        ActionChains(driver).send_keys(OTP + Keys.ENTER).perform()
+        for x in OTP:
+            ActionChains(driver).send_keys(x).perform()
+            time.sleep(0.2)
+        ActionChains(driver).send_keys(Keys.ENTER).perform()
         time.sleep(1.2*20)
     for x in range(60):
         if driver.current_url != "https://tfb.t-mobile.com/apps/tfb_billing/dashboard":
