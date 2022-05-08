@@ -186,7 +186,7 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
         cookies = login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_user)
         if "tfb_billing/dashboard" not in driver.current_url:
             raise Exception("Login Failed")
-
+        time.sleep(2)
         for mobileNum in mobileNums:
             time.sleep(3)
             driver.get("https://tfb.t-mobile.com/apps/tfb_urm/userapproval")
@@ -209,6 +209,7 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                     raise Exception("PlatformBonkers")
 
 
+            time.sleep(2)
             driver.find_element(by=By.ID, value="tmobilelisting-search").send_keys(mobileNum + Keys.ENTER)
             for _ in range(10):
                 if "Acct #967526621" not in driver.page_source:
