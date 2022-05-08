@@ -151,7 +151,7 @@ def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_us
     for x in range(60):
         if driver.current_url != "https://tfb.t-mobile.com/apps/tfb_billing/dashboard":
             time.sleep(2)
-            logger.debug("Waiting login.")
+            logger.debug(f"Waiting login. {(x+1)*2}/120 seconds")
         else:
             logger.debug("Login Success.")
             break
@@ -159,10 +159,10 @@ def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_us
         OTP = fetchOTP_Mail(imap_url, imap_password, imap_user)[0][0].split(">")[-1]
         ActionChains(driver).send_keys(OTP + Keys.ENTER).perform()
         time.sleep(1.2*20)
-    for x in range(10):
+    for x in range(60):
         if driver.current_url != "https://tfb.t-mobile.com/apps/tfb_billing/dashboard":
             time.sleep(1.2*10)
-            logger.debug("Waiting login")
+            logger.debug(f"Waiting login. {(x+1)*2}/120 seconds")
         else:
             logger.debug("Login Success.")
             break
@@ -172,12 +172,16 @@ def login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_us
 
 def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user):
     failedNums = []
-    driver = seleniumLiteTrigger_Chromium()
+    driver = seleniumLiteTrigger()
     try:
         cookies = login(tmob_username, tmob_password, driver, imap_url, imap_password, imap_user)
         if "tfb_billing/dashboard" not in driver.current_url:
             raise Exception("Login Failed")
+
         for mobileNum in mobileNums:
+            time.sleep(3)
+            driver.get("https://tfb.t-mobile.com/apps/tfb_urm/userapproval")
+            time.sleep(3)
             driver.get("https://tfb.t-mobile.com/apps/tfb_acctmgmt/account-management/lines")
             found = False
             atmpt = 0
