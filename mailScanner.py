@@ -120,6 +120,7 @@ def mainApp():
             mobileNums.append(y["MobileNum"])
 
     failedNums = json.loads(open("failedNums.txt","r").read())
+    logger.debug(json.dumps({"Failed Numbers for retry":failedNums, "New Numbers":mobileNums}, indent=3))
     mobileNums = list(set(mobileNums+failedNums))
     logger.debug(json.dumps(mobileNums, indent=3))
     if len(mobileNums) > 0:
