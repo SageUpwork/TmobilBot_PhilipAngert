@@ -260,14 +260,6 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
             selectedEntry = [x for x in driver.find_elements(by=By.CLASS_NAME, value="ng-star-inserted") if
                              ((x.text.startswith(mobileNum)) & (x.text.endswith('\n•••')))][0]
 
-
-
-            if len(selectedEntry.find_elements(by=By.CLASS_NAME, value="suspended-text")) == 0:
-                print("""
-                en(selectedEntry.find_elements(by=By.CLASS_NAME, value="suspended-text")) == 0:
-                """)
-                logger.debug(f"{mobileNum} already active. Skipping")
-                continue
             if len(selectedEntry.find_elements(by=By.CLASS_NAME, value="canceled-text")) > 0:
                 print("""
                 en(selectedEntry.find_elements(by=By.CLASS_NAME, value="canceled-text")) > 0:
@@ -286,6 +278,14 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                 """)
                 logger.debug(f"{mobileNum} is cancelled. Skipping")
                 continue
+
+            if len(selectedEntry.find_elements(by=By.CLASS_NAME, value="suspended-text")) == 0:
+                print("""
+                en(selectedEntry.find_elements(by=By.CLASS_NAME, value="suspended-text")) == 0:
+                """)
+                logger.debug(f"{mobileNum} already active. Skipping")
+                continue
+
             selectedEntry.find_elements(by=By.CLASS_NAME, value="action-ball-margin")[0].click()
             # selectedEntry.find_elements_by_class_name("action-ball-margin")[0].click()
             try:
