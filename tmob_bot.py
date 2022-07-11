@@ -219,6 +219,7 @@ def fetchDBDatapoint(cookies=None):
     aa = response.json()
 
 def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user):
+    cancelledNums = json.loads(open("CancelledLinesSkipped.txt","r").read())
     failedNums = []
     driver = seleniumLiteTrigger()
     try:
@@ -265,7 +266,9 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                 logger.debug(f"{mobileNum} already active. Skipping")
                 continue
             if len(selectedEntry.find_elements(by=By.CLASS_NAME, value="canceled-text")) > 0:
+                cancelledNums.append(mobileNum)
                 logger.debug(f"{mobileNum} is cancelled. Skipping")
+
                 continue
             selectedEntry.find_elements(by=By.CLASS_NAME, value="action-ball-margin")[0].click()
             # selectedEntry.find_elements_by_class_name("action-ball-margin")[0].click()
@@ -289,6 +292,7 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
             time.sleep(1.2*5)
         driver.quit()
         open("failedNums.txt", "w").write(json.dumps(failedNums))
+        open("CancelledLinesSkipped.txt", "w").write(json.dumps(cancelledNums))
     except Exception as e:
         driver.quit()
         open("failedNums.txt", "w").write(json.dumps(failedNums))
