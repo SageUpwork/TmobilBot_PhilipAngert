@@ -292,7 +292,7 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
             time.sleep(1.2*5)
         driver.quit()
         open("failedNums.txt", "w").write(json.dumps(failedNums))
-        open("CancelledLinesSkipped.txt", "w").write(json.dumps(cancelledNums))
+        open("CancelledLinesSkipped.txt", "w").write(json.dumps(cancelledNums, indent=3))
     except Exception as e:
         driver.quit()
         open("failedNums.txt", "w").write(json.dumps(failedNums))
