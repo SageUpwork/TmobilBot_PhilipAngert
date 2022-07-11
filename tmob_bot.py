@@ -261,28 +261,13 @@ def core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap
                              ((x.text.startswith(mobileNum)) & (x.text.endswith('\n•••')))][0]
 
             if len(selectedEntry.find_elements(by=By.CLASS_NAME, value="canceled-text")) > 0:
-                print("""
-                en(selectedEntry.find_elements(by=By.CLASS_NAME, value="canceled-text")) > 0:
-                """)
                 cancelledNums = json.loads(open("CancelledLinesSkipped.txt", "r").read())
-                print("""
-                cancelledNums = json.loads(open("CancelledLinesSkipped.txt", "r").read())
-                """)
                 cancelledNums.append(mobileNum)
-                print("""
-                cancelledNums.append(mobileNum)
-                """)
                 open("CancelledLinesSkipped.txt", "w").write(json.dumps(cancelledNums, indent=3))
-                print("""
-                open("CancelledLinesSkipped.txt", "w").write(json.dumps(cancelledNums, indent=3))
-                """)
                 logger.debug(f"{mobileNum} is cancelled. Skipping")
                 continue
 
             if len(selectedEntry.find_elements(by=By.CLASS_NAME, value="suspended-text")) == 0:
-                print("""
-                en(selectedEntry.find_elements(by=By.CLASS_NAME, value="suspended-text")) == 0:
-                """)
                 logger.debug(f"{mobileNum} already active. Skipping")
                 continue
 
