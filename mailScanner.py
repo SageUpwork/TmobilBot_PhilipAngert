@@ -123,6 +123,9 @@ def mainApp():
     logger.critical(json.dumps({"Failed Numbers for retry":failedNums, "New Numbers":mobileNums}, indent=3))
     mobileNums = list(set(mobileNums+failedNums))
     logger.debug(json.dumps(mobileNums, indent=3))
+    skippedNums = [x.strip() for x in open("NumberToSkip.txt","r").readlines()]
+    logger.debug(f"Skipped numbers {skippedNums}")
+    mobileNums = [x for x in mobileNums if x not in skippedNums]
     if len(mobileNums) > 0:
         core(mobileNums, tmob_username, tmob_password, imap_url, imap_password, imap_user)
         open("lastUpdatedMail.timestamp", "w").write(str(max([x['Date'] for x in extractedData])))
